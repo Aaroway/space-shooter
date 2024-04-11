@@ -9,8 +9,9 @@ public class Player : MonoBehaviour
     public GameObject playerLaser;
     private float _canfire = -1f;
     private float _fireRate = .3f;
+
+    private int _lives = 3;
     
-    //@enemies
     void Start()
     {
         //take the current position and give it a start
@@ -61,6 +62,16 @@ public class Player : MonoBehaviour
         {
             _canfire = Time.time + _fireRate;
             Instantiate(playerLaser, transform.position + new Vector3(0, 0.8f, 0), Quaternion.identity);
+        }
+    }
+
+    public void Damage()
+    {
+        _lives --;
+
+        if (_lives < 1)
+        {
+            Destroy(this.gameObject);
         }
     }
 }
