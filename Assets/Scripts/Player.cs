@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
+    //player sprite added
     [SerializeField]
     private float _speed = 6;
     public GameObject playerLaser;
@@ -11,14 +12,22 @@ public class Player : MonoBehaviour
     private float _fireRate = .3f;
 
     private int _lives = 3;
+    [SerializeField]
+    private SpawnManager _spawnManager;
     
     void Start()
     {
-        //take the current position and give it a start
+        
         transform.position = new Vector3(0, 0, 0);
+        _spawnManager = GameObject.Find("Spawn_Manager").GetComponent<SpawnManager>();
+
+        if (_spawnManager == null)
+        {
+            Debug.LogError("SpawnManager is null");
+        }
     }
 
-    // Update is called once per frame
+    
     void Update()
     {
         CalculateMovement();
@@ -61,7 +70,7 @@ public class Player : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Space) && Time.time > _canfire)
         {
             _canfire = Time.time + _fireRate;
-            Instantiate(playerLaser, transform.position + new Vector3(0, 0.8f, 0), Quaternion.identity);
+            Instantiate(playerLaser, transform.position + new Vector3(0, 1.05f, 0), Quaternion.identity);
         }
     }
 
@@ -71,6 +80,7 @@ public class Player : MonoBehaviour
 
         if (_lives < 1)
         {
+            _spawnManager.OnPlayerDeath();
             Destroy(this.gameObject);
         }
     }
