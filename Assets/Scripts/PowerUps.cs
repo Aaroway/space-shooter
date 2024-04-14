@@ -5,10 +5,12 @@ using UnityEngine;
 public class PowerUps : MonoBehaviour
 {
     private float _speed = 3f;
+    [SerializeField]
+    private int _powerUpID;
     // Start is called before the first frame update
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
@@ -24,15 +26,30 @@ public class PowerUps : MonoBehaviour
     }
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if(other.gameObject.tag == "Player1")
+        if (other.gameObject.tag == "Player1")
         {
             Player player = other.transform.GetComponent<Player>();
-            if(player != null)
+            if (player != null)
             {
-                player.TripleShotActive();
-            }
+                switch (_powerUpID)
+                {
+                    case 0:
+                        player.TripleShotActive();
+                        break;
+                    case 1:
+                        player.SpeedPowerUpActive();
+                        break;
+                    case 2:
+                        player.ShieldsActive();
+                        break;
+                    default:
+                        Debug.Log("Default Values");
+                        break;
+                }
 
-            Destroy(this.gameObject);
+                Destroy(this.gameObject);
+            }
         }
     }
 }
+

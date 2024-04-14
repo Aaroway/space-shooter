@@ -6,10 +6,13 @@ public class Player : MonoBehaviour
 {
     //player sprite added
     [SerializeField]
-    private float _speed = 6;
-    public GameObject playerLaser;
+    private float _speed;
     [SerializeField]
-    public GameObject tripleShot;
+    private GameObject playerLaser;
+    [SerializeField]
+    private GameObject tripleShot;
+    [SerializeField]
+    public GameObject speedBoost;
     private float _canfire = -1f;
     private float _fireRate = .3f;
 
@@ -18,7 +21,10 @@ public class Player : MonoBehaviour
     private SpawnManager _spawnManager;
     [SerializeField]
     private bool _isTrippleShotActive = false;
-    
+    private bool _isSpeedPowerUpActive = false;
+    private bool _isShieldsActive = false;
+
+
     void Start()
     {
         
@@ -45,6 +51,15 @@ public class Player : MonoBehaviour
         //input controls
         float horizontalInput = Input.GetAxis("Horizontal");
         float verticalInput = Input.GetAxis("Vertical");
+
+        if (_isSpeedPowerUpActive == false)
+        {
+            _speed = 7f;
+        }
+        else if (_isSpeedPowerUpActive)
+        {
+            _speed = 14f;
+        }
         transform.Translate(Vector3.right * horizontalInput * _speed * Time.deltaTime);
         transform.Translate(Vector3.up * verticalInput * _speed * Time.deltaTime);
 
@@ -99,8 +114,33 @@ public class Player : MonoBehaviour
         }
     }
 
+    public void SpeedPowerUpActive()
+    {
+        _isSpeedPowerUpActive = true;
+        StartCoroutine(SpeedPowerDown());
+    }
+    IEnumerator SpeedPowerDown()
+    {
+         while (_isSpeedPowerUpActive == true)
+        {
+            yield return new WaitForSeconds(5f);
+            _isSpeedPowerUpActive = false;
+        }
+    }
+
+    public void ShieldsActive()
+    {
+        _isShieldsActive = true;
+    }
+
     public void Damage()
     {
+        if(_isShieldsActive == true)
+        {
+            _isShieldsActive = false;
+            return;
+        }
+
         _lives --;
 
         if (_lives < 1)
