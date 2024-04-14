@@ -8,12 +8,16 @@ public class Player : MonoBehaviour
     [SerializeField]
     private float _speed = 6;
     public GameObject playerLaser;
+    [SerializeField]
+    public GameObject tripleShot;
     private float _canfire = -1f;
     private float _fireRate = .3f;
 
     private int _lives = 3;
     [SerializeField]
     private SpawnManager _spawnManager;
+    [SerializeField]
+    private bool _isTrippleShotActive = false;
     
     void Start()
     {
@@ -69,8 +73,29 @@ public class Player : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Space) && Time.time > _canfire)
         {
-            _canfire = Time.time + _fireRate;
-            Instantiate(playerLaser, transform.position + new Vector3(0, 1.05f, 0), Quaternion.identity);
+            if (_isTrippleShotActive == false)
+            {
+                _canfire = Time.time + _fireRate;
+                Instantiate(playerLaser, transform.position + new Vector3(0, 1.05f, 0), Quaternion.identity);
+            }
+            else if (_isTrippleShotActive == true)
+            {
+                _canfire = Time.time + _fireRate;
+                Instantiate(tripleShot, transform.position, Quaternion.identity);
+            }
+        }
+    }
+    public void TripleShotActive()
+    {
+        _isTrippleShotActive = true;
+        StartCoroutine(TripleShotPowerDown());
+    }
+    IEnumerator TripleShotPowerDown()
+    {
+        while (_isTrippleShotActive == true)
+        {
+            yield return new WaitForSeconds(5f);
+            _isTrippleShotActive = false;
         }
     }
 
