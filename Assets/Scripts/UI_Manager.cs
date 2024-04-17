@@ -16,6 +16,8 @@ public class UI_Manager : MonoBehaviour
     private TMP_Text _gameOverText;
     [SerializeField]
     private TMP_Text _restartGameText;
+
+    private GameManager _gameManager;
     
     // Start is called before the first frame update
     void Start()
@@ -23,6 +25,7 @@ public class UI_Manager : MonoBehaviour
         _scoreText.text = "SCORE: " + 0;
         _gameOverText.gameObject.SetActive(false);
         _restartGameText.gameObject.SetActive(false);
+        _gameManager = GameObject.Find("Game_Manager").GetComponent<GameManager>();
     }
 
     // Update is called once per frame
@@ -36,14 +39,15 @@ public class UI_Manager : MonoBehaviour
 
         if (currentLives == 0)
         {
-            _restartGameText.gameObject.SetActive(true);
-            _gameOverText.gameObject.SetActive(true);
-            StartCoroutine(GameOverFlickerRoutine());
+            GameOverSequence();
         }
-        if (Input.GetKeyDown(KeyCode.R)&& _restartGameText == true)
-        {
-            //inpute r to restart game
-        }
+    }
+    void GameOverSequence()
+    {
+        _gameManager.GameOver();
+        _restartGameText.gameObject.SetActive(true);
+        _gameOverText.gameObject.SetActive(true);
+        StartCoroutine(GameOverFlickerRoutine());
     }
     IEnumerator GameOverFlickerRoutine()
     {
