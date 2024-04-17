@@ -4,25 +4,29 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    //player sprite added
-    [SerializeField]
+    
     private float _speed;
     [SerializeField]
-    private GameObject playerLaser;
+    private GameObject _playerLaser;
     [SerializeField]
-    private GameObject tripleShot;
+    private GameObject _tripleShot;
     [SerializeField]
-    public GameObject speedBoost;
+    private GameObject _speedBoost;
     private float _canfire = -1f;
     private float _fireRate = .3f;
 
     private int _lives = 3;
     [SerializeField]
     private SpawnManager _spawnManager;
-    [SerializeField]
+    
     private bool _isTrippleShotActive = false;
     private bool _isSpeedPowerUpActive = false;
     private bool _isShieldsActive = false;
+    [SerializeField]
+    private GameObject _shieldVisualizer;
+    [SerializeField]
+    private int _score;
+    private UI_Manager _uiManager;
 
 
     void Start()
@@ -30,6 +34,7 @@ public class Player : MonoBehaviour
         
         transform.position = new Vector3(0, 0, 0);
         _spawnManager = GameObject.Find("Spawn_Manager").GetComponent<SpawnManager>();
+        _uiManager = GameObject.Find("Canvas").GetComponent<UI_Manager>();
 
         if (_spawnManager == null)
         {
@@ -42,9 +47,6 @@ public class Player : MonoBehaviour
     {
         CalculateMovement();
         FireLaser();
-
-        
-
     }
     void CalculateMovement()
     {
@@ -91,12 +93,12 @@ public class Player : MonoBehaviour
             if (_isTrippleShotActive == false)
             {
                 _canfire = Time.time + _fireRate;
-                Instantiate(playerLaser, transform.position + new Vector3(0, 1.05f, 0), Quaternion.identity);
+                Instantiate(_playerLaser, transform.position + new Vector3(0, 1.05f, 0), Quaternion.identity);
             }
             else if (_isTrippleShotActive == true)
             {
                 _canfire = Time.time + _fireRate;
-                Instantiate(tripleShot, transform.position, Quaternion.identity);
+                Instantiate(_tripleShot, transform.position, Quaternion.identity);
             }
         }
     }
@@ -131,6 +133,7 @@ public class Player : MonoBehaviour
     public void ShieldsActive()
     {
         _isShieldsActive = true;
+        _shieldVisualizer.gameObject.SetActive(true);
     }
 
     public void Damage()
@@ -138,15 +141,24 @@ public class Player : MonoBehaviour
         if(_isShieldsActive == true)
         {
             _isShieldsActive = false;
+            _shieldVisualizer.gameObject.SetActive(false);
             return;
         }
 
         _lives --;
+
+        _uiManager.UpdateLives(_lives);
 
         if (_lives < 1)
         {
             _spawnManager.OnPlayerDeath();
             Destroy(this.gameObject);
         }
+    }
+
+    public void AddScore(int points)
+    {
+        _score += points;
+        _uiManager.UpdateScore(_score);
     }
 }

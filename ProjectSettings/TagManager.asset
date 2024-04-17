@@ -44,6 +44,12 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: BackGround
+    uniqueID: 4054946953
+    locked: 0
   - name: Combat
     uniqueID: 3164379019
+    locked: 0
+  - name: Canvas
+    uniqueID: 1134472713
     locked: 0
