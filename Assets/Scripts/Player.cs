@@ -27,6 +27,10 @@ public class Player : MonoBehaviour
     [SerializeField]
     private int _score;
     private UI_Manager _uiManager;
+    [SerializeField]
+    private GameObject _rightEngine;
+    [SerializeField]
+    private GameObject _leftEngine;
 
 
     void Start()
@@ -148,6 +152,14 @@ public class Player : MonoBehaviour
         _lives --;
 
         _uiManager.UpdateLives(_lives);
+        if (_lives == 2)
+        {
+            _rightEngine.SetActive(true);
+        }
+        if (_lives == 1)
+        {
+            _leftEngine.SetActive(true);
+        }
 
         if (_lives < 1)
         {

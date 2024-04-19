@@ -6,6 +6,10 @@ public class Enemy : MonoBehaviour
 {
     [SerializeField]
     private float _enemySpeed = 4.0f;
+
+    private Animator _anim;
+
+    private Collider2D _collider;
    
     
     private Player _player;
@@ -13,6 +17,15 @@ public class Enemy : MonoBehaviour
     void Start()
     {
         _player = GameObject.Find("Player").GetComponent<Player>();
+        
+        _collider = GetComponent<Collider2D>();
+
+        _anim = GetComponent<Animator>();
+
+        if (_anim == null)
+        {
+            Debug.LogError("The Animator is Null");
+        }
     }
 
     void Update()
@@ -35,7 +48,7 @@ public class Enemy : MonoBehaviour
     {
         if (other.tag == "Player1")
         {
-            Destroy(this.gameObject);
+            EnemyDeath();
             _player.Damage();
         }
 
@@ -46,8 +59,14 @@ public class Enemy : MonoBehaviour
             {
                 _player.AddScore(10);
             }
-            Destroy(this.gameObject);
-            
+            EnemyDeath();
         }
+    }
+    public void EnemyDeath()
+    {
+        _anim.SetTrigger("OnEnemyDeath");
+        _enemySpeed = 0;
+        _collider.enabled = false;
+        Destroy(this.gameObject, 1f);
     }
 }
