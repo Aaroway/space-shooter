@@ -10,12 +10,16 @@ public class Enemy : MonoBehaviour
     private Animator _anim;
 
     private Collider2D _collider;
-   
+
+
+    private AudioSource _audioSource;
     
     private Player _player;
     
     void Start()
     {
+        _audioSource = GetComponent<AudioSource>();
+        
         _player = GameObject.Find("Player").GetComponent<Player>();
         
         _collider = GetComponent<Collider2D>();
@@ -65,8 +69,10 @@ public class Enemy : MonoBehaviour
     public void EnemyDeath()
     {
         _anim.SetTrigger("OnEnemyDeath");
+        
         _enemySpeed = 0;
         _collider.enabled = false;
+        _audioSource.Play();
         Destroy(this.gameObject, 1f);
     }
 }

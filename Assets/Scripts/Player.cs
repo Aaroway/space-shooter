@@ -31,10 +31,16 @@ public class Player : MonoBehaviour
     private GameObject _rightEngine;
     [SerializeField]
     private GameObject _leftEngine;
+    [SerializeField]
+    private AudioSource _audioSource;
+    
 
 
     void Start()
     {
+        _audioSource = GetComponent<AudioSource>();
+        
+        
         
         transform.position = new Vector3(0, 0, 0);
         _spawnManager = GameObject.Find("Spawn_Manager").GetComponent<SpawnManager>();
@@ -98,11 +104,13 @@ public class Player : MonoBehaviour
             {
                 _canfire = Time.time + _fireRate;
                 Instantiate(_playerLaser, transform.position + new Vector3(0, 1.05f, 0), Quaternion.identity);
+                _audioSource.Play();
             }
             else if (_isTrippleShotActive == true)
             {
                 _canfire = Time.time + _fireRate;
                 Instantiate(_tripleShot, transform.position, Quaternion.identity);
+                _audioSource.Play();
             }
         }
     }
@@ -164,6 +172,7 @@ public class Player : MonoBehaviour
         if (_lives < 1)
         {
             _spawnManager.OnPlayerDeath();
+            
             Destroy(this.gameObject);
         }
     }

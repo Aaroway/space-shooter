@@ -4,13 +4,16 @@ using UnityEngine;
 
 public class PowerUps : MonoBehaviour
 {
+    
     private float _speed = 3f;
     [SerializeField]
     private int _powerUpID;
+    [SerializeField]
+    private AudioClip _clip;
     // Start is called before the first frame update
     void Start()
     {
-
+        
     }
 
     // Update is called once per frame
@@ -29,6 +32,7 @@ public class PowerUps : MonoBehaviour
         if (other.gameObject.tag == "Player1")
         {
             Player player = other.transform.GetComponent<Player>();
+            AudioSource.PlayClipAtPoint(_clip, transform.position);
             if (player != null)
             {
                 switch (_powerUpID)
@@ -46,6 +50,7 @@ public class PowerUps : MonoBehaviour
                         Debug.Log("Default Values");
                         break;
                 }
+                
 
                 Destroy(this.gameObject);
             }
