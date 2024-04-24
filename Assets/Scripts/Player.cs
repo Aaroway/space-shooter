@@ -5,7 +5,9 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     
-    private float _speed;
+    private float _thrusterSpeedMod = 1.5f;
+    private float _speedBoostMod = 2.2f;
+    private float _speed = 7f;
     [SerializeField]
     private GameObject _playerLaser;
     [SerializeField]
@@ -33,13 +35,14 @@ public class Player : MonoBehaviour
     private GameObject _leftEngine;
     [SerializeField]
     private AudioSource _audioSource;
+    private bool _isThrusterActive = false;
     
-
+    
+    //speed thruster not working
 
     void Start()
     {
         _audioSource = GetComponent<AudioSource>();
-        
         
         
         transform.position = new Vector3(0, 0, 0);
@@ -64,17 +67,28 @@ public class Player : MonoBehaviour
         float horizontalInput = Input.GetAxis("Horizontal");
         float verticalInput = Input.GetAxis("Vertical");
 
-        if (_isSpeedPowerUpActive == false)
+        if (_isThrusterActive)
         {
-            _speed = 7f;
+            transform.Translate(Vector3.right * horizontalInput * (_speed * _thrusterSpeedMod) * Time.deltaTime);
+            transform.Translate(Vector3.up * verticalInput * (_speed * _thrusterSpeedMod) * Time.deltaTime);
         }
-        else if (_isSpeedPowerUpActive)
+        else if (_isThrusterActive == false)
         {
-            _speed = 14f;
+            transform.Translate(Vector3.right * horizontalInput * _speed * Time.deltaTime);
+            transform.Translate(Vector3.up * verticalInput *_speed * Time.deltaTime);
         }
-        transform.Translate(Vector3.right * horizontalInput * _speed * Time.deltaTime);
-        transform.Translate(Vector3.up * verticalInput * _speed * Time.deltaTime);
 
+
+        if (_isSpeedPowerUpActive)
+        {
+            transform.Translate(Vector3.right * horizontalInput * (_speed * _speedBoostMod) * Time.deltaTime);
+            transform.Translate(Vector3.up * verticalInput * (_speed * _speedBoostMod) * Time.deltaTime);
+        }
+        else
+        {
+            transform.Translate(Vector3.right * horizontalInput * _speed * Time.deltaTime);
+            transform.Translate(Vector3.up * verticalInput * _speed * Time.deltaTime);
+        }
         //y boundary
         if (transform.position.y >= 2)
         {
@@ -95,6 +109,8 @@ public class Player : MonoBehaviour
             transform.position = new Vector3(11.2f, transform.position.y, 0);
         }
     }
+
+    
 
     void FireLaser()
     {
@@ -126,6 +142,15 @@ public class Player : MonoBehaviour
             yield return new WaitForSeconds(5f);
             _isTrippleShotActive = false;
         }
+    }
+
+    public void PlayerThruster()
+    {
+        _isThrusterActive = true;
+    }
+    public void PlayerNormalSpeed()
+    {
+        _isThrusterActive = false;
     }
 
     public void SpeedPowerUpActive()

@@ -13,6 +13,10 @@ public class UI_Manager : MonoBehaviour
     [SerializeField]
     private Sprite[] _liveSprites;
     [SerializeField]
+    private Sprite[] _shieldBar;
+    [SerializeField]
+    private Image _shieldBarImage;
+    [SerializeField]
     private TMP_Text _gameOverText;
     [SerializeField]
     private TMP_Text _restartGameText;
@@ -36,6 +40,7 @@ public class UI_Manager : MonoBehaviour
     public void UpdateLives(int currentLives)
     {
         _livesImage.sprite = _liveSprites[currentLives];
+        _shieldBarImage.sprite = _shieldBar[currentLives];
 
         if (currentLives == 0)
         {
