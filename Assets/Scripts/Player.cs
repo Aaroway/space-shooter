@@ -36,6 +36,10 @@ public class Player : MonoBehaviour
     [SerializeField]
     private AudioSource _audioSource;
     private bool _isThrusterActive = false;
+    private int _ammunition = 20;
+    private bool _isAmmoDepleted = false;
+    private bool _maxAmmo = false;
+    private int _fullAmmo = 20;
     
     
     //speed thruster not working
@@ -110,21 +114,31 @@ public class Player : MonoBehaviour
         }
     }
 
-    
+
 
     void FireLaser()
     {
-        if (Input.GetKeyDown(KeyCode.Space) && Time.time > _canfire)
+        if (Input.GetKeyDown(KeyCode.Space) && Time.time > _canfire && !_isAmmoDepleted)
         {
+            _canfire = Time.time + _fireRate;
+            _ammunition--;
+            AmmunitionCount(_ammunition);
+
+            if (_ammunition <= 0)
+            {
+                _isAmmoDepleted = true;
+            }
+            
+        
             if (_isTrippleShotActive == false)
             {
-                _canfire = Time.time + _fireRate;
+                
                 Instantiate(_playerLaser, transform.position + new Vector3(0, 1.05f, 0), Quaternion.identity);
                 _audioSource.Play();
             }
             else if (_isTrippleShotActive == true)
             {
-                _canfire = Time.time + _fireRate;
+                
                 Instantiate(_tripleShot, transform.position, Quaternion.identity);
                 _audioSource.Play();
             }
@@ -206,5 +220,20 @@ public class Player : MonoBehaviour
     {
         _score += points;
         _uiManager.UpdateScore(_score);
+    }
+    public void AmmunitionCount(int count)
+    {
+        _ammunition = count;
+        if (_maxAmmo == true)
+        {
+            _ammunition = 20;
+        }
+        _uiManager.UpdateAmmoCount(_ammunition);
+    }
+
+    public void AmmunitionRefilled()
+    {
+        _ammunition = _fullAmmo;
+        _uiManager.UpdateAmmoCount(_ammunition);
     }
 }
