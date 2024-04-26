@@ -49,6 +49,9 @@ public class PowerUps : MonoBehaviour
                     case 3:
                         player.AmmunitionRefilled();
                         break;
+                    case 4:
+                        player.LifePowerUp();
+                        break;
                     default:
                         Debug.Log("Default Values");
                         break;

@@ -771,6 +771,8 @@ MonoBehaviour:
   - {fileID: 6668626041532288454, guid: 62e360a76036e3442ae190b94a6d154c, type: 3}
   - {fileID: 2427551671336964136, guid: c579daeb5a3f5504d8a0ed4f69feaffb, type: 3}
   - {fileID: 291773431925358739, guid: bf0ce1c14dd26b14baae2c8c539eae30, type: 3}
+  - {fileID: 6236221995874579073, guid: ff3f5bc419961f647b03a6392f5e1a7e, type: 3}
+  - {fileID: 3416021762539954774, guid: 831a9b1f431f41e4aa329421b6d85460, type: 3}
   _enemyContainer: {fileID: 1837895333}
 --- !u!4 &309821235
 Transform:
@@ -2156,9 +2158,10 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 482c8e4c0346b704aa5f1760c3c989d5, type: 3}
   - {fileID: 21300000, guid: 9fe6f40efddf0b64fb68a3382b14a4db, type: 3}
   _shieldBar:
-  - {fileID: 6400552702600982961, guid: 3161588d3188dd94f90e907b5e463cd3, type: 3}
+  - {fileID: -2068574112114660309, guid: 3161588d3188dd94f90e907b5e463cd3, type: 3}
   - {fileID: -2068574112114660309, guid: 3161588d3188dd94f90e907b5e463cd3, type: 3}
   - {fileID: 8471521539899323818, guid: 3161588d3188dd94f90e907b5e463cd3, type: 3}
+  - {fileID: 6400552702600982961, guid: 3161588d3188dd94f90e907b5e463cd3, type: 3}
   _shieldBarImage: {fileID: 1345310991}
   _gameOverText: {fileID: 1366990058}
   _restartGameText: {fileID: 148541233}

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    
+
     private float _thrusterSpeedMod = 1.5f;
     private float _speedBoostMod = 2.2f;
     private float _speed = 7f;
@@ -20,7 +20,7 @@ public class Player : MonoBehaviour
     private int _lives = 3;
     [SerializeField]
     private SpawnManager _spawnManager;
-    
+
     private bool _isTrippleShotActive = false;
     private bool _isSpeedPowerUpActive = false;
     private bool _isShieldsActive = false;
@@ -41,14 +41,15 @@ public class Player : MonoBehaviour
     private bool _maxAmmo = false;
     private int _fullAmmo = 20;
     
-    
+
+
     //speed thruster not working
 
     void Start()
     {
         _audioSource = GetComponent<AudioSource>();
-        
-        
+
+
         transform.position = new Vector3(0, 0, 0);
         _spawnManager = GameObject.Find("Spawn_Manager").GetComponent<SpawnManager>();
         _uiManager = GameObject.Find("Canvas").GetComponent<UI_Manager>();
@@ -59,11 +60,13 @@ public class Player : MonoBehaviour
         }
     }
 
-    
+
     void Update()
     {
         CalculateMovement();
         FireLaser();
+
+
     }
     void CalculateMovement()
     {
@@ -79,7 +82,7 @@ public class Player : MonoBehaviour
         else if (_isThrusterActive == false)
         {
             transform.Translate(Vector3.right * horizontalInput * _speed * Time.deltaTime);
-            transform.Translate(Vector3.up * verticalInput *_speed * Time.deltaTime);
+            transform.Translate(Vector3.up * verticalInput * _speed * Time.deltaTime);
         }
 
 
@@ -128,17 +131,17 @@ public class Player : MonoBehaviour
             {
                 _isAmmoDepleted = true;
             }
-            
-        
+
+
             if (_isTrippleShotActive == false)
             {
-                
+
                 Instantiate(_playerLaser, transform.position + new Vector3(0, 1.05f, 0), Quaternion.identity);
                 _audioSource.Play();
             }
             else if (_isTrippleShotActive == true)
             {
-                
+
                 Instantiate(_tripleShot, transform.position, Quaternion.identity);
                 _audioSource.Play();
             }
@@ -174,7 +177,7 @@ public class Player : MonoBehaviour
     }
     IEnumerator SpeedPowerDown()
     {
-         while (_isSpeedPowerUpActive == true)
+        while (_isSpeedPowerUpActive == true)
         {
             yield return new WaitForSeconds(5f);
             _isSpeedPowerUpActive = false;
@@ -189,16 +192,18 @@ public class Player : MonoBehaviour
 
     public void Damage()
     {
-        if(_isShieldsActive == true)
+        if (_isShieldsActive == true)
         {
             _isShieldsActive = false;
             _shieldVisualizer.gameObject.SetActive(false);
             return;
         }
 
-        _lives --;
+
+        _lives--;
 
         _uiManager.UpdateLives(_lives);
+        _uiManager.UpdateShieldBar(_lives);
         if (_lives == 2)
         {
             _rightEngine.SetActive(true);
@@ -211,7 +216,7 @@ public class Player : MonoBehaviour
         if (_lives < 1)
         {
             _spawnManager.OnPlayerDeath();
-            
+
             Destroy(this.gameObject);
         }
     }
@@ -235,5 +240,17 @@ public class Player : MonoBehaviour
     {
         _ammunition = _fullAmmo;
         _uiManager.UpdateAmmoCount(_ammunition);
+    }
+
+    public void LifePowerUp()
+    {
+        if (_lives < 3)
+        {
+
+            _lives++;
+            _uiManager.UpdateLives(_lives);
+            _uiManager.UpdateShieldBar(_lives);
+            return;
+        }
     }
 }
