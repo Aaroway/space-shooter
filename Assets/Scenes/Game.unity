@@ -773,7 +773,9 @@ MonoBehaviour:
   - {fileID: 291773431925358739, guid: bf0ce1c14dd26b14baae2c8c539eae30, type: 3}
   - {fileID: 6236221995874579073, guid: ff3f5bc419961f647b03a6392f5e1a7e, type: 3}
   - {fileID: 3416021762539954774, guid: 831a9b1f431f41e4aa329421b6d85460, type: 3}
+  - {fileID: 4670744263559190526, guid: ddfb5a7d16c1c164f9e5c8f06a2a5e4a, type: 3}
   _enemyContainer: {fileID: 1837895333}
+  _rarePowerUp: {fileID: 0}
 --- !u!4 &309821235
 Transform:
   m_ObjectHideFlags: 0

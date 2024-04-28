@@ -22,6 +22,8 @@ public class UI_Manager : MonoBehaviour
     private TMP_Text _gameOverText;
     [SerializeField]
     private TMP_Text _restartGameText;
+    [SerializeField]
+    public Slider thrusterBarSlider;
 
     private GameManager _gameManager;
     
@@ -50,9 +52,13 @@ public class UI_Manager : MonoBehaviour
             GameOverSequence();
         }
     }
-    public void UpdateShieldBar(int currentLives)
+    public void UpdateShieldBar(int currentShield)
     {
-        _shieldBarImage.sprite = _shieldBar[currentLives];
+        _shieldBarImage.sprite = _shieldBar[currentShield];
+    }
+    public void UpdateThrusterBar(float currentEnergy)
+    {
+        thrusterBarSlider.value = currentEnergy;
     }
     public void UpdateAmmoCount(int count)
     {

@@ -52,6 +52,9 @@ public class PowerUps : MonoBehaviour
                     case 4:
                         player.LifePowerUp();
                         break;
+                    case 5:
+                        player.Overload();
+                        break;
                     default:
                         Debug.Log("Default Values");
                         break;

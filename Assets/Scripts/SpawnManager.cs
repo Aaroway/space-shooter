@@ -11,10 +11,13 @@ public class SpawnManager : MonoBehaviour
     [SerializeField]
     private GameObject _enemyContainer;
     private bool _stopSpawning = false;
+    [SerializeField]
+    private GameObject _rarePowerUp;
+    
 
     void Start()
     {
-        
+
     }
 
 
@@ -45,14 +48,37 @@ public class SpawnManager : MonoBehaviour
             yield return new WaitForSeconds(Random.Range(3f, 8f));
         }
     }
+    IEnumerator SpawnRarePowerUpRoutine()
+    {
+        while (_stopSpawning == false)
+        {
+
+            yield return new WaitForSeconds(10.0f);
+            int rareDrop = Random.Range(0, 10);
+
+            if (rareDrop < 7)
+            {
+                Vector3 posToSpawn = new Vector3(Random.Range(-8f, 8f), 7, 0);
+                Instantiate(_powerUps[5], posToSpawn, Quaternion.identity);
+                yield return new WaitForSeconds(10f);
+            }
+            else
+            {
+                Debug.Log("No rare PowerUp");
+                yield return new WaitForSeconds(10f);
+            }
+
+        }
+    }
     public void StartSpawning()
     {
-        
         StartCoroutine(SpawnEnemyRoutine());
         StartCoroutine(SpawnPowerUpRoutine());
+        StartCoroutine(SpawnRarePowerUpRoutine());
     }
     public void OnPlayerDeath()
     {
         _stopSpawning = true;
     }
 }
+

@@ -36,10 +36,17 @@ public class Player : MonoBehaviour
     [SerializeField]
     private AudioSource _audioSource;
     private bool _isThrusterActive = false;
+    private float _thrusterDrainRate = 2f;
+    private float _thrusterRechargeRate = 1f;
+    public float maxEnergy = 10f;
+    public float currentEnergy;
+
     private int _ammunition = 20;
     private bool _isAmmoDepleted = false;
     private bool _maxAmmo = false;
     private int _fullAmmo = 20;
+    private bool _isOverloadActive = false;
+   
     
 
 
@@ -49,22 +56,26 @@ public class Player : MonoBehaviour
     {
         _audioSource = GetComponent<AudioSource>();
 
-
+        
         transform.position = new Vector3(0, 0, 0);
         _spawnManager = GameObject.Find("Spawn_Manager").GetComponent<SpawnManager>();
         _uiManager = GameObject.Find("Canvas").GetComponent<UI_Manager>();
-
+        currentEnergy = 10f;
+        _uiManager.UpdateThrusterBar(currentEnergy = 10);//tweek thruster bar
         if (_spawnManager == null)
         {
             Debug.LogError("SpawnManager is null");
         }
+
     }
 
 
     void Update()
     {
+        
         CalculateMovement();
         FireLaser();
+        
 
 
     }
@@ -121,7 +132,22 @@ public class Player : MonoBehaviour
 
     void FireLaser()
     {
-        if (Input.GetKeyDown(KeyCode.Space) && Time.time > _canfire && !_isAmmoDepleted)
+        if ((_isOverloadActive) && (Input.GetKeyDown(KeyCode.Space) && Time.time > _canfire))
+        {
+            _canfire = Time.time + _fireRate;
+            AmmunitionCount(_fullAmmo);
+            if (_isTrippleShotActive == false)
+            {
+                Instantiate(_playerLaser, transform.position + new Vector3(0, 1.05f, 0), Quaternion.identity);
+                _audioSource.Play();
+            }
+            else if (_isTrippleShotActive == true)
+            {
+                Instantiate(_tripleShot, transform.position, Quaternion.identity);
+                _audioSource.Play();
+            }
+        }
+        else if ((!_isOverloadActive) && (Input.GetKeyDown(KeyCode.Space) && Time.time > _canfire && !_isAmmoDepleted))
         {
             _canfire = Time.time + _fireRate;
             _ammunition--;
@@ -160,14 +186,22 @@ public class Player : MonoBehaviour
             _isTrippleShotActive = false;
         }
     }
-
+   
     public void PlayerThruster()
     {
         _isThrusterActive = true;
+
+        if (currentEnergy > 0)
+        {
+            DrainThrusters(_thrusterDrainRate);
+            
+        }
     }
     public void PlayerNormalSpeed()
     {
         _isThrusterActive = false;
+        RechargeThrusters(_thrusterRechargeRate);
+        
     }
 
     public void SpeedPowerUpActive()
@@ -252,5 +286,29 @@ public class Player : MonoBehaviour
             _uiManager.UpdateShieldBar(_lives);
             return;
         }
+    }
+    public void Overload()
+    {
+        _isOverloadActive = true;
+        StartCoroutine(OverloadPowerDown());
+    }
+    private IEnumerator OverloadPowerDown()
+    {
+        yield return new WaitForSeconds(7f);
+        _isOverloadActive = false;
+    }
+    public void DrainThrusters(float drainRatePerSecond)
+    {
+        float amount = drainRatePerSecond * Time.deltaTime;
+        currentEnergy -= amount;
+        currentEnergy = Mathf.Clamp(currentEnergy, 0f, maxEnergy);
+        _uiManager.UpdateThrusterBar(currentEnergy);
+    }
+    public void RechargeThrusters(float rechargeRatePerSecond)
+    {
+        float amount = rechargeRatePerSecond * Time.deltaTime;
+        currentEnergy += amount;
+        currentEnergy = Mathf.Clamp(currentEnergy, 0f, maxEnergy);
+        _uiManager.UpdateThrusterBar(currentEnergy);
     }
 }
