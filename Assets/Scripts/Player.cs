@@ -46,11 +46,9 @@ public class Player : MonoBehaviour
     private bool _maxAmmo = false;
     private int _fullAmmo = 20;
     private bool _isOverloadActive = false;
+    
    
     
-
-
-    //speed thruster not working
 
     void Start()
     {
@@ -60,6 +58,7 @@ public class Player : MonoBehaviour
         transform.position = new Vector3(0, 0, 0);
         _spawnManager = GameObject.Find("Spawn_Manager").GetComponent<SpawnManager>();
         _uiManager = GameObject.Find("Canvas").GetComponent<UI_Manager>();
+        
         
         _uiManager.UpdateThrusterBar(currentEnergy = 10);//tweek thruster bar
         if (_spawnManager == null)
@@ -226,6 +225,8 @@ public class Player : MonoBehaviour
 
     public void Damage()
     {
+        CameraShake.Instance.StartShaking();
+
         if (_isShieldsActive == true)
         {
             _isShieldsActive = false;
@@ -234,8 +235,9 @@ public class Player : MonoBehaviour
         }
 
 
+        
+        
         _lives--;
-
         _uiManager.UpdateLives(_lives);
         _uiManager.UpdateShieldBar(_lives);
         if (_lives == 2)
