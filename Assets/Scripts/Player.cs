@@ -37,7 +37,7 @@ public class Player : MonoBehaviour
     private AudioSource _audioSource;
     private bool _isThrusterActive = false;
     private float _thrusterDrainRate = 2f;
-    private float _thrusterRechargeRate = 1f;
+    private float _thrusterRechargeRate = 1.5f;
     public float maxEnergy = 10f;
     public float currentEnergy;
 
@@ -60,7 +60,7 @@ public class Player : MonoBehaviour
         transform.position = new Vector3(0, 0, 0);
         _spawnManager = GameObject.Find("Spawn_Manager").GetComponent<SpawnManager>();
         _uiManager = GameObject.Find("Canvas").GetComponent<UI_Manager>();
-        currentEnergy = 10f;
+        
         _uiManager.UpdateThrusterBar(currentEnergy = 10);//tweek thruster bar
         if (_spawnManager == null)
         {
@@ -89,11 +89,19 @@ public class Player : MonoBehaviour
         {
             transform.Translate(Vector3.right * horizontalInput * (_speed * _thrusterSpeedMod) * Time.deltaTime);
             transform.Translate(Vector3.up * verticalInput * (_speed * _thrusterSpeedMod) * Time.deltaTime);
+            if (currentEnergy > 0)
+            {
+                DrainThrusters(_thrusterDrainRate);
+            }
         }
         else if (_isThrusterActive == false)
         {
             transform.Translate(Vector3.right * horizontalInput * _speed * Time.deltaTime);
             transform.Translate(Vector3.up * verticalInput * _speed * Time.deltaTime);
+            if (currentEnergy <= 10f)
+            {
+                RechargeThrusters(_thrusterRechargeRate);
+            }
         }
 
 
@@ -189,19 +197,11 @@ public class Player : MonoBehaviour
    
     public void PlayerThruster()
     {
-        _isThrusterActive = true;
-
-        if (currentEnergy > 0)
-        {
-            DrainThrusters(_thrusterDrainRate);
-            
-        }
+        _isThrusterActive = true; 
     }
     public void PlayerNormalSpeed()
     {
         _isThrusterActive = false;
-        RechargeThrusters(_thrusterRechargeRate);
-        
     }
 
     public void SpeedPowerUpActive()
@@ -297,18 +297,23 @@ public class Player : MonoBehaviour
         yield return new WaitForSeconds(7f);
         _isOverloadActive = false;
     }
-    public void DrainThrusters(float drainRatePerSecond)
+    public void DrainThrusters(float _thrusterDrainRate)
     {
-        float amount = drainRatePerSecond * Time.deltaTime;
+        float amount = _thrusterDrainRate * Time.deltaTime;
         currentEnergy -= amount;
         currentEnergy = Mathf.Clamp(currentEnergy, 0f, maxEnergy);
-        _uiManager.UpdateThrusterBar(currentEnergy);
+        UpdateUIThrusterSlider();
     }
-    public void RechargeThrusters(float rechargeRatePerSecond)
+    public void RechargeThrusters(float _thrusterRechargeRate)
     {
-        float amount = rechargeRatePerSecond * Time.deltaTime;
+        float amount = _thrusterRechargeRate * Time.deltaTime;
         currentEnergy += amount;
         currentEnergy = Mathf.Clamp(currentEnergy, 0f, maxEnergy);
+        UpdateUIThrusterSlider();
+    }
+
+    public void UpdateUIThrusterSlider()
+    {
         _uiManager.UpdateThrusterBar(currentEnergy);
     }
 }
